@@ -1,169 +1,247 @@
 import type { Metadata } from "next"
+import type { ElementType } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { 
-  Bath, 
-  Droplets, 
-  Grid3X3, 
-  Wrench, 
-  Zap,
+
+import {
+  ArrowRight,
+  Bath,
   CheckCircle,
-  ArrowRight
+  Droplets,
+  Grid3X3,
+  Wrench,
+  Zap,
 } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+const SITE_URL = "https://badrum-sundsvall.se"
+
 export const metadata: Metadata = {
-  title: "Tjänster inom badrumsrenovering",
-  description: "Vi erbjuder helrenovering av badrum, tätskikt, kakel & klinker, VVS och el i Sundsvall. Få offert från certifierade hantverkare.",
+  title: "Tjänster inom badrumsrenovering i Sundsvall",
+  description:
+    "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
+  alternates: { canonical: "/tjanster" },
+  openGraph: {
+    title: "Tjänster inom badrumsrenovering i Sundsvall",
+    description:
+      "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
+    url: `${SITE_URL}/tjanster`,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tjänster inom badrumsrenovering i Sundsvall",
+    description:
+      "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
+  },
+  robots: { index: true, follow: true },
 }
 
-const services = [
+/**
+ * VIKTIGT:
+ * Vi använder ElementType istället för JSX.Element / SVGProps
+ * för att undvika TS + aria-hidden-konflikter
+ */
+type IconComponent = ElementType<{ className?: string }>
+
+type Service = {
+  slug: string
+  icon: IconComponent
+  title: string
+  description: string
+  features: string[]
+  seo: {
+    name: string
+    serviceType: string
+  }
+}
+
+const services: Service[] = [
   {
+    slug: "helrenovering-badrum",
     icon: Bath,
     title: "Helrenovering av badrum",
-    description: "Komplett badrumsrenovering från golv till tak. Vi koordinerar alla moment så du får ett nyckelfärdigt badrum utan att behöva hantera flera olika hantverkare.",
+    description:
+      "Komplett badrumsrenovering från golv till tak. Alla moment samordnas så du får ett nyckelfärdigt badrum utan att behöva hantera flera entreprenörer.",
     features: [
       "Rivning och bortforsling",
-      "Nytt tätskikt enligt branschregler",
-      "Kakel, klinker och våtrumsmatta",
-      "VVS och el-arbeten",
-      "Målning och lister",
+      "Tätskikt enligt branschregler",
+      "Kakel, klinker eller våtrumsmatta",
+      "VVS- och elarbeten via behöriga",
+      "Målning och snickeriavslut",
       "Installation av inredning",
     ],
+    seo: {
+      name: "Helrenovering av badrum i Sundsvall",
+      serviceType: "Bathroom renovation",
+    },
   },
   {
+    slug: "tatskikt-vatrum",
     icon: Droplets,
     title: "Tätskikt & våtrum",
-    description: "Ett korrekt utfört tätskikt är grunden för ett hållbart badrum. Våra certifierade hantverkare följer GVK:s branschregler för våtrum.",
+    description:
+      "Ett korrekt utfört tätskikt är grunden för ett hållbart badrum. Arbetet utförs enligt gällande branschregler.",
     features: [
-      "GVK-certifierade hantverkare",
-      "Tätskikt enligt BBV",
-      "Godkända material och metoder",
-      "10 års försäkringsgaranti",
-      "Dokumentation och protokoll",
-      "Kontroll och besiktning",
+      "Godkända material",
+      "Dokumentation och intyg",
+      "Kontroll enligt BBV/GVK",
+      "Rådgivning om lösningar",
+      "Besiktningsunderlag",
+      "Tryggt utförande",
     ],
+    seo: {
+      name: "Tätskikt och våtrum i Sundsvall",
+      serviceType: "Waterproofing service",
+    },
   },
   {
+    slug: "kakel-klinker",
     icon: Grid3X3,
     title: "Kakel & klinker",
-    description: "Kakel och klinker är ofta det som sätter stilen i badrummet. Vi hjälper dig välja material och utförande som passar just ditt badrum.",
+    description:
+      "Plattsättning med fokus på fall, fogar och detaljer. Anpassat efter badrummets storlek och stil.",
     features: [
       "Vägg- och golvplattor",
-      "Stort urval av material",
       "Mönsterläggning",
-      "Golvvärme under klinker",
-      "Fogning och silikonfogning",
-      "Hörnlister och avslutningar",
+      "Golvvärme",
+      "Fogning och silikon",
+      "Hörnlister",
+      "Materialrådgivning",
     ],
+    seo: {
+      name: "Kakel och klinker i Sundsvall",
+      serviceType: "Tile installation",
+    },
   },
   {
+    slug: "vvs-badrum",
     icon: Wrench,
     title: "VVS i badrum",
-    description: "Professionell VVS-installation för dusch, badkar, handfat och toalett. Vi ser till att alla rör och avlopp fungerar perfekt.",
+    description:
+      "Installation av rör, avlopp och sanitet av behöriga installatörer.",
     features: [
-      "Nya stammar och avlopp",
-      "Installation av handfat",
-      "Dusch och badkar",
-      "Toalettinstallation",
-      "Blandare och duschmunstycken",
-      "Tvättmaskinsanslutning",
+      "Rördragning",
+      "Dusch & badkar",
+      "WC & handfat",
+      "Blandare",
+      "Tvättmaskin",
+      "Provtryckning",
     ],
+    seo: {
+      name: "VVS i badrum i Sundsvall",
+      serviceType: "Plumbing service",
+    },
   },
   {
+    slug: "el-badrum",
     icon: Zap,
     title: "El i badrum",
-    description: "Säker och funktionell elinstallation i våtutrymmen. Våra elektriker är certifierade för arbete i badrum enligt gällande regelverk.",
+    description:
+      "Säker elinstallation i våtutrymmen med behöriga elektriker.",
     features: [
-      "Elinstallation i våtrum",
-      "Spotlights och belysning",
-      "Eluttag (jordfelsbrytare)",
-      "Golvvärme-el",
-      "Spegelskåp med belysning",
-      "Handdukstorkar",
+      "Spotlights",
+      "Eluttag",
+      "Golvvärme (el)",
+      "Spegelskåp",
+      "Handdukstork",
+      "Jordfelsbrytare",
     ],
+    seo: {
+      name: "Elinstallation i badrum i Sundsvall",
+      serviceType: "Electrical service",
+    },
   },
 ]
 
+const areas = ["Sundsvall", "Timrå", "Alnö", "Njurunda"] as const
+
 export default function ServicesPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Tjänster inom badrumsrenovering i Sundsvall",
+    url: `${SITE_URL}/tjanster`,
+    inLanguage: "sv-SE",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: services.map((s, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Service",
+          name: s.seo.name,
+          serviceType: s.seo.serviceType,
+          areaServed: areas.map((name) => ({
+            "@type": "City",
+            name,
+          })),
+        },
+      })),
+    },
+  }
+
   return (
     <div className="flex flex-col">
-      {/* Hero */}
       <section className="bg-muted py-12 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl text-balance">
-              Tjänster inom badrumsrenovering
-            </h1>
-            <p className="mt-4 text-lg text-muted-foreground lg:text-xl">
-              Vi förmedlar alla typer av badrumsrenoveringar i Sundsvall och omnejd. 
-              Från enklare uppfräschningar till kompletta helrenoveringar.
-            </p>
-            <div className="mt-8">
-              <Button asChild size="lg" className="min-h-[48px]">
-                <Link href="/kontakt">
-                  Få offert
-                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-                </Link>
-              </Button>
-            </div>
-          </div>
+          <h1 className="text-3xl font-bold sm:text-5xl">
+            Tjänster inom badrumsrenovering i Sundsvall
+          </h1>
         </div>
       </section>
 
-      {/* Services Grid */}
       <section className="bg-card py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <div className="space-y-12">
-            {services.map((service, index) => (
-              <Card key={service.title} className="border-border overflow-hidden">
-                <div className={`grid lg:grid-cols-2 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-                  <CardHeader className="bg-muted p-6 lg:p-8 flex flex-col justify-center">
+        <div className="mx-auto max-w-7xl px-4 lg:px-8 space-y-12">
+          {services.map((service, index) => {
+            const Icon = service.icon
+            const reversed = index % 2 === 1
+
+            return (
+              <Card key={service.slug} className="overflow-hidden">
+                <div className="grid lg:grid-cols-2">
+                  <CardHeader
+                    className={`bg-muted p-6 lg:p-8 ${
+                      reversed ? "lg:order-2" : ""
+                    }`}
+                  >
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-                        <service.icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
+                      <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center">
+                        <Icon className="h-6 w-6 text-primary-foreground" />
                       </div>
-                      <CardTitle className="text-xl lg:text-2xl">{service.title}</CardTitle>
+                      <CardTitle className="text-xl lg:text-2xl">
+                        {service.title}
+                      </CardTitle>
                     </div>
-                    <p className="text-muted-foreground">
-                      {service.description}
-                    </p>
+                    <p className="text-muted-foreground">{service.description}</p>
                   </CardHeader>
-                  <CardContent className="p-6 lg:p-8">
-                    <h4 className="font-semibold text-foreground mb-4">Detta ingår:</h4>
+
+                  <CardContent
+                    className={`p-6 lg:p-8 ${
+                      reversed ? "lg:order-1" : ""
+                    }`}
+                  >
                     <ul className="grid gap-3 sm:grid-cols-2">
-                      {service.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-2">
-                          <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" aria-hidden="true" />
-                          <span className="text-sm text-foreground">{feature}</span>
+                      {service.features.map((f) => (
+                        <li key={f} className="flex gap-2">
+                          <CheckCircle className="h-5 w-5 text-accent" />
+                          <span>{f}</span>
                         </li>
                       ))}
                     </ul>
                   </CardContent>
                 </div>
               </Card>
-            ))}
-          </div>
+            )
+          })}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-primary py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-primary-foreground sm:text-3xl mb-4">
-            Redo att komma igång?
-          </h2>
-          <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
-            Berätta om ditt projekt så hjälper vi dig hitta rätt hantverkare i Sundsvall, Timrå, Alnö eller Njurunda.
-          </p>
-          <Button asChild size="lg" variant="secondary" className="min-h-[48px]">
-            <Link href="/kontakt">
-              Få kostnadsfri offert
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </div>
   )
 }

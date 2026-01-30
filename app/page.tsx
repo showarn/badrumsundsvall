@@ -8,17 +8,27 @@ import { ImageCarousel } from "@/components/image-carousel"
 import { CheckCircle, ArrowRight, Shield, Award, Clock, Sparkles } from "lucide-react"
 
 const SITE_URL = "https://badrum-sundsvall.se"
+const PAGE_TITLE = "Badrumsrenovering i Sundsvall | Få kostnadsfri offert"
+const PAGE_DESC =
+  "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Vi förmedlar din förfrågan till lokala, kontrollerade hantverkare. ROT-avdrag. Svar inom 24h."
 
 export const metadata: Metadata = {
-  title: "Badrumsrenovering i Sundsvall",
-  description:
-    "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Vi förmedlar din förfrågan till lokala, kontrollerade hantverkare. ROT-avdrag. Svar inom 24h.",
+  title: PAGE_TITLE,
+  description: PAGE_DESC,
   alternates: { canonical: "/" },
   openGraph: {
     url: SITE_URL,
-    title: "Badrumsrenovering i Sundsvall | Få kostnadsfri offert",
+    title: PAGE_TITLE,
     description:
       "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Lokala hantverkare, ROT-avdrag, svar inom 24h.",
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Badrumsrenovering i Sundsvall",
+      },
+    ],
   },
 }
 
@@ -95,6 +105,46 @@ const miniFaq = [
 ]
 
 export default function HomePage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${SITE_URL}/#service`,
+    name: "Badrumsrenovering Sundsvall",
+    url: SITE_URL,
+    inLanguage: "sv-SE",
+    image: `${SITE_URL}/og.jpg`,
+    description: "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": SITE_URL,
+      url: SITE_URL,
+      name: PAGE_TITLE,
+    },
+    areaServed: [
+      { "@type": "City", name: "Sundsvall" },
+      { "@type": "City", name: "Timrå" },
+      { "@type": "City", name: "Alnö" },
+      { "@type": "City", name: "Njurunda" },
+    ],
+    serviceType: "Badrumsrenovering",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 62.3908,
+      longitude: 17.3069,
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Tjänster inom badrumsrenovering",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Helrenovering av badrum" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Tätskikt & våtrum" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Kakel & klinker" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "VVS i badrum" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "El i badrum" } },
+      ],
+    },
+  } as const
+
   return (
     <div className="flex flex-col">
       <section className="relative min-h-[90vh] flex items-center">
@@ -129,7 +179,7 @@ export default function HomePage() {
               >
                 <Link href="/kontakt">
                   Få kostnadsfri offert
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Link>
               </Button>
               <Button
@@ -142,10 +192,10 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <div className="mt-12 flex items-center gap-6 text-sm text-background/80">
+            <div className="mt-12 flex flex-wrap items-center gap-6 text-sm text-background/80">
               {["Kostnadsfritt", "Ingen bindning", "ROT möjligt"].map((t) => (
                 <div key={t} className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="h-4 w-4" aria-hidden="true" />
                   <span>{t}</span>
                 </div>
               ))}
@@ -158,9 +208,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
           <div className="text-center mb-12">
             <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-3">Inspiration</p>
-            <h2 className="font-serif text-3xl font-medium text-foreground sm:text-4xl">
-              Badrumsinspiration
-            </h2>
+            <h2 className="font-serif text-3xl font-medium text-foreground sm:text-4xl">Badrumsinspiration</h2>
             <p className="mt-3 text-muted-foreground">
               Exempel på stilar och lösningar – din offert beror på val av material och omfattning.
             </p>
@@ -193,7 +241,7 @@ export default function HomePage() {
             <Button asChild size="lg" className="min-h-[56px] px-10">
               <Link href="/kontakt">
                 Kom igång
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Link>
             </Button>
           </div>
@@ -251,7 +299,7 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {trustFeatures.map((feature) => (
               <div key={feature.title} className="text-center lg:text-left">
-                <feature.icon className="h-8 w-8 mx-auto lg:mx-0 mb-4 text-primary-foreground/80" />
+                <feature.icon className="h-8 w-8 mx-auto lg:mx-0 mb-4 text-primary-foreground/80" aria-hidden="true" />
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-sm text-primary-foreground/70 leading-relaxed">{feature.description}</p>
               </div>
@@ -306,7 +354,7 @@ export default function HomePage() {
                   "Ingen bindning eller köpkrav",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-foreground">
-                    <CheckCircle className="h-5 w-5 text-accent shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-accent shrink-0" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -325,28 +373,8 @@ export default function HomePage() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ProfessionalService",
-            name: "Badrumsrenovering Sundsvall",
-            description:
-              "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
-            areaServed: [
-              { "@type": "City", name: "Sundsvall" },
-              { "@type": "City", name: "Timrå" },
-              { "@type": "City", name: "Alnö" },
-              { "@type": "City", name: "Njurunda" },
-            ],
-            serviceType: "Badrumsrenovering",
-            url: SITE_URL,
-            geo: {
-              "@type": "GeoCoordinates",
-              latitude: 62.3908,
-              longitude: 17.3069,
-            },
-          }),
-        }}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
     </div>
   )
