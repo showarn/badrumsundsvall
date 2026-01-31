@@ -13,30 +13,80 @@ const PAGE_DESC =
   "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Vi förmedlar din förfrågan till lokala, kontrollerade hantverkare. ROT-avdrag. Svar inom 24h."
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: PAGE_TITLE,
   description: PAGE_DESC,
-  alternates: { canonical: "/" },
+
+  alternates: {
+    canonical: "/",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
+  keywords: [
+    "badrumsrenovering sundsvall",
+    "renovera badrum sundsvall",
+    "badrum sundsvall",
+    "offert badrumsrenovering",
+    "kakel klinker sundsvall",
+    "tätskikt våtrum sundsvall",
+    "vvs badrum sundsvall",
+    "el badrum sundsvall",
+  ],
+
   openGraph: {
-    url: SITE_URL,
+    type: "website",
+    locale: "sv_SE",
+    url: "/",
     title: PAGE_TITLE,
     description:
       "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Lokala hantverkare, ROT-avdrag, svar inom 24h.",
+    siteName: "Badrum Sundsvall",
     images: [
       {
-        url: "/og.jpg",
+        url: `${SITE_URL}/og.jpg`,
         width: 1200,
         height: 630,
         alt: "Badrumsrenovering i Sundsvall",
       },
     ],
   },
+
+  twitter: {
+    card: "summary_large_image",
+    title: PAGE_TITLE,
+    description: PAGE_DESC,
+    images: [`${SITE_URL}/og.jpg`],
+  },
 }
 
 const carouselImages = [
-  { src: "/images/carousel-1.jpg", alt: "Modern dusch med regndusch och glasvägg" },
-  { src: "/images/carousel-2.jpg", alt: "Elegant badrum med dubbla handfat" },
-  { src: "/images/carousel-3.jpg", alt: "Mysigt badrum med fristående badkar" },
-  { src: "/images/carousel-4.jpg", alt: "Minimalistiskt badrum med moderna detaljer" },
+  {
+    src: "/images/badrum-sundsvall-modern-dusch-regndusch.webp",
+    alt: "Modern duschlösning med regndusch och glasvägg i badrum i Sundsvall",
+  },
+  {
+    src: "/images/badrum-sundsvall-elegant-badrum-dubbla-handfat.webp",
+    alt: "Elegant badrum med dubbla handfat – badrumsrenovering i Sundsvall",
+  },
+  {
+    src: "/images/badrum-sundsvall-fristaende-badkar.webp",
+    alt: "Mysigt badrum med fristående badkar efter badrumsrenovering i Sundsvall",
+  },
+  {
+    src: "/images/badrum-sundsvall-minimalistiskt-badrum.webp",
+    alt: "Minimalistiskt badrum med moderna detaljer – badrum i Sundsvall",
+  },
 ]
 
 const steps = [
@@ -113,12 +163,18 @@ export default function HomePage() {
     url: SITE_URL,
     inLanguage: "sv-SE",
     image: `${SITE_URL}/og.jpg`,
-    description: "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
+    description:
+      "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": SITE_URL,
       url: SITE_URL,
       name: PAGE_TITLE,
+    },
+    provider: {
+      "@type": "Organization",
+      name: "Innovo AB",
+      url: SITE_URL,
     },
     areaServed: [
       { "@type": "City", name: "Sundsvall" },
@@ -150,8 +206,8 @@ export default function HomePage() {
       <section className="relative min-h-[90vh] flex items-center">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-bathroom.jpg"
-            alt="Lyxigt skandinaviskt badrum med fristående badkar och naturligt ljus"
+            src="/images/hero-badrumsrenovering-sundsvall-modern.webp"
+            alt="Modern badrumsrenovering i Sundsvall med kakel, dusch och stilren design"
             fill
             className="object-cover"
             priority
@@ -279,7 +335,7 @@ export default function HomePage() {
 
             <div className="relative aspect-[4/5] overflow-hidden">
               <Image
-                src="/images/bathroom-renovation.jpg"
+                src="/images/badrumsrenovering-sundsvall-pagaende.webp"
                 alt="Pågående badrumsrenovering i Sundsvall"
                 fill
                 className="object-cover"
@@ -299,7 +355,10 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {trustFeatures.map((feature) => (
               <div key={feature.title} className="text-center lg:text-left">
-                <feature.icon className="h-8 w-8 mx-auto lg:mx-0 mb-4 text-primary-foreground/80" aria-hidden="true" />
+                <feature.icon
+                  className="h-8 w-8 mx-auto lg:mx-0 mb-4 text-primary-foreground/80"
+                  aria-hidden="true"
+                />
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-sm text-primary-foreground/70 leading-relaxed">{feature.description}</p>
               </div>
