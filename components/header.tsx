@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button"
 const navigation = [
   { name: "Start", href: "/" },
   { name: "Tjänster", href: "/tjanster" },
+  { name: "Guide", href: "/guide" },
   { name: "Vanliga frågor", href: "/faq" },
   { name: "Om oss", href: "/om-oss" },
   { name: "Kontakt", href: "/kontakt" },
 ]
+
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

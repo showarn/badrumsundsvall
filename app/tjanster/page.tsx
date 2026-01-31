@@ -2,151 +2,142 @@ import type { Metadata } from "next"
 import type { ElementType } from "react"
 import Link from "next/link"
 
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-  ArrowRight,
   Bath,
-  CheckCircle,
   Droplets,
   Grid3X3,
   Wrench,
   Zap,
+  CheckCircle,
+  ArrowRight,
 } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const SITE_URL = "https://badrum-sundsvall.se"
 
 export const metadata: Metadata = {
   title: "Tjänster inom badrumsrenovering i Sundsvall",
   description:
-    "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
+    "Vi erbjuder helrenovering av badrum, tätskikt & våtrum, kakel & klinker, VVS och el i Sundsvall. Få kostnadsfri offert – mål om svar inom 24h.",
   alternates: { canonical: "/tjanster" },
   openGraph: {
     title: "Tjänster inom badrumsrenovering i Sundsvall",
     description:
-      "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
+      "Helrenovering, tätskikt, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert – mål om svar inom 24h.",
     url: `${SITE_URL}/tjanster`,
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Tjänster inom badrumsrenovering i Sundsvall",
-    description:
-      "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd. Kostnadsfri offert inom 24 timmar.",
   },
   robots: { index: true, follow: true },
 }
 
-/**
- * Vi använder ElementType istället för React.SVGProps<...>
- * för att undvika TS-konflikter med lucide + aria-hidden och JSX-namespace.
- */
 type IconComponent = ElementType<{ className?: string }>
 
 type Service = {
-  slug: string
+  slug: `/${string}`
   icon: IconComponent
   title: string
   description: string
-  features: string[]
+  features: readonly string[]
   seo: {
     name: string
     serviceType: string
   }
 }
 
+const areas = ["Sundsvall", "Timrå", "Alnö", "Njurunda"] as const
+
 const services: Service[] = [
   {
-    slug: "helrenovering-badrum",
+    slug: "/tjanster/helrenovering-badrum",
     icon: Bath,
     title: "Helrenovering av badrum",
     description:
-      "Komplett badrumsrenovering från golv till tak. Alla moment samordnas så du får ett nyckelfärdigt badrum utan att behöva hantera flera entreprenörer.",
+      "Komplett badrumsrenovering från golv till tak. Vi koordinerar alla moment så du får ett nyckelfärdigt badrum utan att behöva hantera flera olika hantverkare.",
     features: [
       "Rivning och bortforsling",
-      "Tätskikt enligt branschregler",
-      "Kakel, klinker eller våtrumsmatta",
-      "VVS- och elarbeten via behöriga",
-      "Målning och snickeriavslut",
+      "Nytt tätskikt enligt branschregler",
+      "Kakel, klinker och våtrumsmatta",
+      "VVS och el-arbeten",
+      "Målning och lister",
       "Installation av inredning",
-    ],
+    ] as const,
     seo: {
       name: "Helrenovering av badrum i Sundsvall",
       serviceType: "Bathroom renovation",
     },
   },
   {
-    slug: "tatskikt-vatrum",
+    slug: "/tjanster/tatskikt-vatrum",
     icon: Droplets,
     title: "Tätskikt & våtrum",
     description:
-      "Ett korrekt utfört tätskikt är grunden för ett hållbart badrum. Arbetet utförs enligt gällande branschregler.",
+      "Ett korrekt utfört tätskikt är grunden för ett hållbart badrum. Våra certifierade hantverkare följer gällande branschregler.",
     features: [
-      "Arbete enligt gällande branschregler",
+      "Tätskikt enligt branschpraxis",
       "Godkända material och metoder",
-      "Dokumentation och intyg",
-      "Kontroll enligt rutiner",
-      "Rådgivning om lösningar",
+      "Dokumentation och protokoll",
+      "Kontroll och rutiner",
+      "Rådgivning",
       "Besiktningsunderlag vid behov",
-    ],
+    ] as const,
     seo: {
       name: "Tätskikt och våtrum i Sundsvall",
       serviceType: "Waterproofing service",
     },
   },
   {
-    slug: "kakel-klinker",
+    slug: "/tjanster/kakel-klinker",
     icon: Grid3X3,
     title: "Kakel & klinker",
     description:
-      "Kakel och klinker sätter stilen i badrummet. Vi hjälper dig hitta rätt utförande och matchar med plattsättare som levererar raka fall, fina fogar och snygga avslut.",
+      "Kakel och klinker sätter stilen i badrummet. Vi hjälper dig välja material och utförande som passar just ditt badrum.",
     features: [
       "Vägg- och golvplattor",
-      "Mönsterläggning och nischer",
+      "Mönsterläggning",
       "Golvvärme under klinker",
       "Fogning och silikon",
-      "Hörnlister och avslut",
-      "Rådgivning materialval",
-    ],
+      "Hörnlister",
+      "Snygga avslut",
+    ] as const,
     seo: {
       name: "Kakel och klinker i Sundsvall",
       serviceType: "Tile installation",
     },
   },
   {
-    slug: "vvs-badrum",
+    slug: "/tjanster/vvs-badrum",
     icon: Wrench,
     title: "VVS i badrum",
     description:
-      "Trygg VVS-installation för dusch, badkar, handfat och WC. Vi matchar dig med behöriga installatörer så att rör och avlopp blir rätt från början.",
+      "Professionell VVS-installation för dusch, badkar, handfat och WC. Tryggt utfört av behöriga installatörer.",
     features: [
       "Rördragning och avlopp",
-      "Dusch och badkar",
-      "Handfat och WC",
-      "Blandare och duschset",
+      "Dusch & badkar",
+      "Handfat & WC",
+      "Blandare",
       "Tvättmaskinsanslutning",
-      "Provtryckning vid behov",
-    ],
+      "Provtryckning",
+    ] as const,
     seo: {
       name: "VVS i badrum i Sundsvall",
       serviceType: "Plumbing service",
     },
   },
   {
-    slug: "el-badrum",
+    slug: "/tjanster/el-badrum",
     icon: Zap,
     title: "El i badrum",
     description:
-      "Säker och funktionell el i våtutrymmen. Vi matchar dig med behöriga elektriker för belysning, uttag, golvvärme och smarta lösningar.",
+      "Säker och funktionell el i badrum. El i våtrum ska alltid planeras och utföras korrekt för trygghet och funktion.",
     features: [
       "Elinstallation i våtrum",
-      "Spotlights och belysning",
-      "Eluttag och jordfelsbrytare",
+      "Spotlights & belysning",
+      "Eluttag & jordfelsbrytare",
       "Golvvärme (el)",
-      "Spegelskåp med belysning",
+      "Spegelskåp",
       "Handdukstork",
-    ],
+    ] as const,
     seo: {
       name: "Elinstallation i badrum i Sundsvall",
       serviceType: "Electrical service",
@@ -154,15 +145,12 @@ const services: Service[] = [
   },
 ]
 
-const areas = ["Sundsvall", "Timrå", "Alnö", "Njurunda"] as const
-
 export default function ServicesPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "Tjänster inom badrumsrenovering i Sundsvall",
-    description:
-      "Helrenovering av badrum, tätskikt och våtrum, kakel & klinker, VVS och el i Sundsvall med omnejd.",
+    description: metadata.description,
     inLanguage: "sv-SE",
     url: `${SITE_URL}/tjanster`,
     mainEntity: {
@@ -176,6 +164,7 @@ export default function ServicesPage() {
           "@type": "Service",
           name: s.seo.name,
           serviceType: s.seo.serviceType,
+          url: `${SITE_URL}${s.slug}`,
           areaServed: areas.map((name) => ({ "@type": "City", name })),
         },
       })),
@@ -191,19 +180,81 @@ export default function ServicesPage() {
             <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground">
               Sundsvall med omnejd
             </p>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl text-balance">
-              Tjänster inom badrumsrenovering i Sundsvall
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              Tjänster inom badrumsrenovering
             </h1>
             <p className="mt-4 text-lg text-muted-foreground lg:text-xl">
-              Vi förmedlar badrumsrenoveringar i {areas.join(", ")}. Från uppfräschning till helrenovering – du får
-              kostnadsfri offert och snabb återkoppling.
+              Vi förmedlar badrumsrenoveringar i {areas.join(", ")} – från mindre uppfräschningar till kompletta
+              helrenoveringar. Vill du förstå hela processen först? Läs vår{" "}
+              <Link
+                href="/guide"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                guide steg för steg
+              </Link>
+              .
             </p>
-            <div className="mt-8">
-              <Button asChild size="lg" className="min-h-[48px]">
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <Button asChild size="lg">
                 <Link href="/kontakt">
                   Få offert
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="bg-transparent">
+                <Link href="/guide">Läs guiden</Link>
+              </Button>
+            </div>
+
+            {/* Quick nav chips (stark internlänkning) */}
+            <div className="mt-8 flex flex-wrap gap-3 text-sm">
+              <Link
+                href="/guide"
+                className="rounded-full border border-border bg-card px-4 py-2 text-foreground hover:bg-card/70 transition-colors"
+              >
+                Guide
+              </Link>
+              {services.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={s.slug}
+                  className="rounded-full border border-border bg-card px-4 py-2 text-foreground hover:bg-card/70 transition-colors"
+                >
+                  {s.title}
+                </Link>
+              ))}
+              <Link
+                href="/faq"
+                className="rounded-full border border-border bg-card px-4 py-2 text-foreground hover:bg-card/70 transition-colors"
+              >
+                Vanliga frågor
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Guide teaser (hub → guide) */}
+      <section className="bg-card">
+        <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+          <div className="rounded-xl border border-border bg-muted p-6 lg:p-8">
+            <h2 className="text-xl font-semibold text-foreground">
+              Osäker på var du ska börja?
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Vi har samlat ordning på momenten, vad som påverkar pris och hur du undviker vanliga misstag i vår guide.
+              Perfekt innan du skickar in en offertförfrågan.
+            </p>
+            <div className="mt-5 flex flex-col sm:flex-row gap-3">
+              <Button asChild>
+                <Link href="/guide">
+                  Läs guiden
+                  <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="bg-transparent">
+                <Link href="/kontakt">Få offert direkt</Link>
               </Button>
             </div>
           </div>
@@ -212,79 +263,95 @@ export default function ServicesPage() {
 
       {/* Services */}
       <section className="bg-card py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <div className="space-y-12">
-            {services.map((service, index) => {
-              const Icon = service.icon
-              const isReversed = index % 2 === 1
+        <div className="mx-auto max-w-7xl px-4 lg:px-8 space-y-12">
+          {services.map((service, index) => {
+            const Icon = service.icon
+            const reversed = index % 2 === 1
 
-              return (
-                <Card key={service.slug} className="border-border overflow-hidden">
-                  <div className="grid lg:grid-cols-2">
-                    <CardHeader
-                      className={[
-                        "bg-muted p-6 lg:p-8 flex flex-col justify-center",
-                        isReversed ? "lg:order-2" : "lg:order-1",
-                      ].join(" ")}
-                    >
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-                          <Icon className="h-6 w-6 text-primary-foreground" />
-                        </div>
-                        <CardTitle className="text-xl lg:text-2xl">{service.title}</CardTitle>
+            return (
+              <Card key={service.slug} className="border-border overflow-hidden">
+                <div className="grid lg:grid-cols-2">
+                  <CardHeader
+                    className={[
+                      "bg-muted p-6 lg:p-8 flex flex-col justify-center",
+                      reversed ? "lg:order-2" : "lg:order-1",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
+                        <Icon className="h-6 w-6 text-primary-foreground" aria-hidden="true" />
                       </div>
-                      <p className="text-muted-foreground">{service.description}</p>
-                    </CardHeader>
+                      <CardTitle className="text-xl lg:text-2xl">
+                        {service.title}
+                      </CardTitle>
+                    </div>
 
-                    <CardContent
-                      className={[
-                        "p-6 lg:p-8",
-                        isReversed ? "lg:order-1" : "lg:order-2",
-                      ].join(" ")}
-                    >
-                      <h2 className="font-semibold text-foreground mb-4">{service.title} – detta ingår</h2>
-                      <ul className="grid gap-3 sm:grid-cols-2">
-                        {service.features.map((feature) => (
-                          <li key={feature} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                            <span className="text-sm text-foreground">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </div>
-                </Card>
-              )
-            })}
-          </div>
+                    <p className="text-muted-foreground">{service.description}</p>
 
-          <div className="mt-14 rounded-xl border border-border bg-muted p-6 lg:p-8">
-            <h2 className="text-xl font-semibold text-foreground">Vanliga områden vi förmedlar jobb i</h2>
-            <p className="mt-2 text-muted-foreground">
-              {areas.join(", ")} – och närliggande orter. Kontakta oss så matchar vi dig med rätt företag för ditt projekt.
-            </p>
-            <div className="mt-5">
-              <Button asChild variant="outline" className="bg-transparent">
-                <Link href="/faq">Se vanliga frågor</Link>
-              </Button>
-            </div>
-          </div>
+                    {/* Läs mer + extra internlänk */}
+                    <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                      <Button asChild variant="outline" className="bg-transparent">
+                        <Link href={service.slug}>Läs mer</Link>
+                      </Button>
+                      <Button asChild variant="ghost" className="justify-start px-0 text-foreground hover:bg-transparent hover:underline underline-offset-4">
+                        <Link href="/guide">Se processen i guiden</Link>
+                      </Button>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent
+                    className={[
+                      "p-6 lg:p-8",
+                      reversed ? "lg:order-1" : "lg:order-2",
+                    ].join(" ")}
+                  >
+                    <h3 className="font-semibold text-foreground mb-4">
+                      Detta ingår
+                    </h3>
+                    <ul className="grid gap-3 sm:grid-cols-2">
+                      {service.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-2">
+                          <CheckCircle className="h-5 w-5 text-accent mt-0.5" aria-hidden="true" />
+                          <span className="text-sm text-foreground">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </div>
+              </Card>
+            )
+          })}
         </div>
       </section>
 
       {/* CTA */}
       <section className="bg-primary py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-primary-foreground sm:text-3xl mb-4">Redo att komma igång?</h2>
+          <h2 className="text-2xl font-bold text-primary-foreground mb-4">
+            Redo att komma igång?
+          </h2>
           <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
-            Berätta om ditt projekt så hjälper vi dig hitta rätt hantverkare i {areas.join(", ")}.
-          </p>
-          <Button asChild size="lg" variant="secondary" className="min-h-[48px]">
-            <Link href="/kontakt">
-              Få kostnadsfri offert
-              <ArrowRight className="ml-2 h-4 w-4" />
+            Skicka in en kostnadsfri förfrågan – vi matchar dig med rätt företag i Sundsvall med omnejd. Vill du läsa mer
+            först? Ta en snabb titt på{" "}
+            <Link
+              href="/guide"
+              className="underline underline-offset-4 hover:text-primary-foreground"
+            >
+              vår guide
             </Link>
-          </Button>
+            .
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/kontakt">
+                Få kostnadsfri offert
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Link href="/guide">Läs guiden</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
