@@ -6,14 +6,8 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 
 type LeadFormVariant = "full" | "compact"
 
@@ -35,15 +29,15 @@ function toStringValue(v: FormDataEntryValue | null): string {
   return typeof v === "string" ? v.trim() : ""
 }
 
+const selectBase =
+  "flex min-h-[44px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background " +
+  "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 " +
+  "disabled:cursor-not-allowed disabled:opacity-50"
+
 export function LeadForm({ variant = "full" }: LeadFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Controlled values for shadcn Select (so we can submit reliably)
-  const [projectType, setProjectType] = useState<string>("")
-  const [size, setSize] = useState<string>("")
-  const [timeline, setTimeline] = useState<string>("")
 
   const isFull = useMemo(() => variant === "full", [variant])
 
@@ -59,16 +53,15 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       const fd = new FormData(form)
 
       const payload: LeadPayload = {
-        projectType: projectType || toStringValue(fd.get("projectType")),
-        size: size || toStringValue(fd.get("size")),
-        timeline: timeline || toStringValue(fd.get("timeline")),
+        projectType: toStringValue(fd.get("projectType")),
+        size: toStringValue(fd.get("size")),
+        timeline: toStringValue(fd.get("timeline")),
         postalCode: toStringValue(fd.get("postalCode")),
         name: toStringValue(fd.get("name")),
         phone: toStringValue(fd.get("phone")),
         description: isFull ? toStringValue(fd.get("description")) || undefined : undefined,
       }
 
-      // Minimal client-side guard (server validates too)
       if (!payload.projectType || !payload.size || !payload.timeline) {
         throw new Error("Välj typ av projekt, storlek och tidsram.")
       }
@@ -94,6 +87,7 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       }
 
       router.push("/tack")
+      return
     } catch (err) {
       const message = err instanceof Error ? err.message : "Något gick fel."
       setError(message)
@@ -103,50 +97,33 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-      {/* Hidden inputs so values exist in FormData even if Select is used */}
-      <input type="hidden" name="projectType" value={projectType} />
-      <input type="hidden" name="size" value={size} />
-      <input type="hidden" name="timeline" value={timeline} />
-
       <div className="space-y-2">
         <Label htmlFor="projectType">Typ av projekt</Label>
-        <Select value={projectType} onValueChange={setProjectType} required>
-          <SelectTrigger id="projectType" className="min-h-[44px]">
-            <SelectValue placeholder="Välj typ av projekt" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="renovation">Renovering av befintligt badrum</SelectItem>
-            <SelectItem value="new">Nytt badrum</SelectItem>
-          </SelectContent>
-        </Select>
+        <select id="projectType" name="projectType" required className={cn(selectBase, "text-sm")}>
+          <option value="">Välj typ av projekt</option>
+          <option value="renovation">Renovering av befintligt badrum</option>
+          <option value="new">Nytt badrum</option>
+        </select>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="size">Ungefärlig storlek</Label>
-        <Select value={size} onValueChange={setSize} required>
-          <SelectTrigger id="size" className="min-h-[44px]">
-            <SelectValue placeholder="Välj storlek" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="small">Litet (under 5 kvm)</SelectItem>
-            <SelectItem value="medium">Mellan (5–10 kvm)</SelectItem>
-            <SelectItem value="large">Stort (över 10 kvm)</SelectItem>
-          </SelectContent>
-        </Select>
+        <select id="size" name="size" required className={cn(selectBase, "text-sm")}>
+          <option value="">Välj storlek</option>
+          <option value="small">Litet (under 5 kvm)</option>
+          <option value="medium">Mellan (5–10 kvm)</option>
+          <option value="large">Stort (över 10 kvm)</option>
+        </select>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="timeline">När vill du starta?</Label>
-        <Select value={timeline} onValueChange={setTimeline} required>
-          <SelectTrigger id="timeline" className="min-h-[44px]">
-            <SelectValue placeholder="Välj tidsram" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="now">Så snart som möjligt</SelectItem>
-            <SelectItem value="1-3months">Inom 1–3 månader</SelectItem>
-            <SelectItem value="later">Senare / Planerar</SelectItem>
-          </SelectContent>
-        </Select>
+        <select id="timeline" name="timeline" required className={cn(selectBase, "text-sm")}>
+          <option value="">Välj tidsram</option>
+          <option value="now">Så snart som möjligt</option>
+          <option value="1-3months">Inom 1–3 månader</option>
+          <option value="later">Senare / Planerar</option>
+        </select>
       </div>
 
       <div className="space-y-2">
@@ -165,14 +142,7 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="name">Namn</Label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="Ditt namn"
-          required
-          className="min-h-[44px]"
-        />
+        <Input id="name" name="name" type="text" placeholder="Ditt namn" required className="min-h-[44px]" />
       </div>
 
       <div className="space-y-2">
@@ -219,9 +189,7 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
         {isSubmitting ? "Skickar..." : "Få offert inom 24h"}
       </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
-        Inget köpkrav – kostnadsfritt
-      </p>
+      <p className="text-center text-sm text-muted-foreground">Inget köpkrav – kostnadsfritt</p>
     </form>
   )
 }
