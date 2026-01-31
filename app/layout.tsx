@@ -10,7 +10,7 @@ import { CookieNotice } from "@/components/cookie-notice"
 
 const SITE_URL = "https://badrum-sundsvall.se"
 const SITE_NAME = "Badrumsrenovering Sundsvall"
-const GA_ID = "G-W7YPFKN239"
+const GA_ID = "G-W7YPFWZ939"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
