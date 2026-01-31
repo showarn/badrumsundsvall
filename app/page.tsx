@@ -94,18 +94,52 @@ const steps = [
     number: "01",
     title: "Beskriv ditt projekt",
     description: "Fyll i formuläret med dina önskemål och behov för ditt badrum.",
+    href: "/kontakt",
+    cta: "Skicka förfrågan",
   },
   {
     number: "02",
     title: "Vi förmedlar din förfrågan",
     description: "Din förfrågan skickas till lokala och kontrollerade hantverkare i Sundsvall.",
+    href: "/tjanster",
+    cta: "Se tjänster",
   },
   {
     number: "03",
     title: "Jämför och välj",
     description: "Du väljer själv om du vill gå vidare och med vem.",
+    href: "/faq",
+    cta: "Läs vanliga frågor",
   },
-]
+] as const
+
+const popularServices = [
+  {
+    title: "Helrenovering av badrum i Sundsvall",
+    desc: "Nyckelfärdigt badrum från rivning till färdig montering av inredning.",
+    href: "/tjanster/helrenovering-badrum",
+  },
+  {
+    title: "Tätskikt & våtrum i Sundsvall",
+    desc: "Tätskiktssystem och kritiska detaljer – grunden för ett hållbart badrum.",
+    href: "/tjanster/tatskikt-vatrum",
+  },
+  {
+    title: "Kakel & klinker i badrum i Sundsvall",
+    desc: "Plattsättning med rätt fog, avslut och hållbart resultat.",
+    href: "/tjanster/kakel-klinker",
+  },
+  {
+    title: "VVS i badrum i Sundsvall",
+    desc: "Rördragning, avlopp och inkoppling av dusch/WC/handfat.",
+    href: "/tjanster/vvs-badrum",
+  },
+  {
+    title: "El i badrum i Sundsvall",
+    desc: "Belysning, eluttag och golvvärme – planerat och utfört korrekt.",
+    href: "/tjanster/el-badrum",
+  },
+] as const
 
 const priceRanges = [
   { type: "Litet badrum", size: "under 5 kvm", range: "80 000 – 150 000 kr" },
@@ -152,7 +186,7 @@ const miniFaq = [
     answer:
       "Vi strävar efter att förmedla till företag som följer branschregler för våtrum. Certifieringar kan variera och bekräftas i offert/avtal.",
   },
-]
+] as const
 
 export default function HomePage() {
   const structuredData = {
@@ -163,8 +197,7 @@ export default function HomePage() {
     url: SITE_URL,
     inLanguage: "sv-SE",
     image: `${SITE_URL}/og.jpg`,
-    description:
-      "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
+    description: "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": SITE_URL,
@@ -217,9 +250,7 @@ export default function HomePage() {
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-20 lg:px-8">
           <div className="max-w-xl">
-            <p className="text-sm uppercase tracking-[0.2em] text-background/80 mb-4">
-              Badrumsrenovering i Sundsvall
-            </p>
+            <p className="text-sm uppercase tracking-[0.2em] text-background/80 mb-4">Badrumsrenovering i Sundsvall</p>
             <h1 className="font-serif text-4xl font-medium tracking-tight text-background sm:text-5xl lg:text-6xl text-balance leading-[1.1]">
               Ditt drömbadrum börjar här
             </h1>
@@ -283,11 +314,30 @@ export default function HomePage() {
           <div className="grid gap-12 md:grid-cols-3 md:gap-8">
             {steps.map((step, index) => (
               <div key={step.number} className="relative text-center md:text-left">
-                <span className="font-serif text-6xl font-light tracking-tight leading-none text-foreground/50 drop-shadow-sm">
-  {step.number}
-</span>
-                <h3 className="mt-4 text-xl font-semibold text-foreground">{step.title}</h3>
-                <p className="mt-3 text-muted-foreground leading-relaxed">{step.description}</p>
+                <Link
+                  href={step.href}
+                  className="group block rounded-2xl border border-transparent p-4 -m-4 transition hover:bg-card hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label={`${step.title} – ${step.cta}`}
+                >
+                  <span className="font-serif text-6xl font-light tracking-tight leading-none text-foreground/50 drop-shadow-sm">
+                    {step.number}
+                  </span>
+
+                  <h3 className="mt-4 text-xl font-semibold text-foreground group-hover:underline underline-offset-4">
+                    {step.title}
+                  </h3>
+
+                  <p className="mt-3 text-muted-foreground leading-relaxed">{step.description}</p>
+
+                  <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                    {step.cta}
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </p>
+                </Link>
+
                 {index < steps.length - 1 && (
                   <div className="hidden md:block absolute top-8 left-full w-full h-px bg-border -translate-x-1/2" />
                 )}
@@ -308,6 +358,48 @@ export default function HomePage() {
 
       <section className="bg-card py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-3">Tjänster</p>
+            <h2 className="font-serif text-3xl font-medium text-foreground sm:text-4xl">
+              Populära tjänster inom badrumsrenovering
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Utforska våra vanligaste tjänster. Varje sida förklarar processen, vad som ingår och vanliga frågor.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {popularServices.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group rounded-2xl border border-border bg-card p-6 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <h3 className="text-lg font-semibold text-foreground group-hover:underline underline-offset-4">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+                <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground">
+                  Läs mer
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button asChild variant="outline" size="lg" className="min-h-[56px] px-8 bg-transparent">
+              <Link href="/tjanster">Se alla tjänster</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-card py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-20 items-center">
             <div>
               <p className="text-sm uppercase tracking-[0.15em] text-muted-foreground mb-3">Priser</p>
@@ -321,11 +413,11 @@ export default function HomePage() {
               <div className="space-y-0 border-t border-border">
                 {priceRanges.map((item) => (
                   <div key={item.type} className="flex justify-between items-center py-5 border-b border-border">
-                    <div>
+                    <div className="min-w-0">
                       <span className="text-foreground font-medium">{item.type}</span>
                       <span className="text-muted-foreground ml-2 text-sm">({item.size})</span>
                     </div>
-                    <span className="font-semibold text-foreground">{item.range}</span>
+                    <span className="font-semibold text-foreground whitespace-nowrap">{item.range}</span>
                   </div>
                 ))}
               </div>
@@ -381,6 +473,15 @@ export default function HomePage() {
               <div key={item.question} className="py-8">
                 <h3 className="text-lg font-semibold text-foreground mb-3">{item.question}</h3>
                 <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
+                <p className="mt-3">
+                  <Link
+                    href="/faq"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:underline underline-offset-4"
+                  >
+                    Läs fler frågor
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </p>
               </div>
             ))}
           </div>
