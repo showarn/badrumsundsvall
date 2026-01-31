@@ -1,5 +1,6 @@
 import React from "react"
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import { Inter, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -9,6 +10,7 @@ import { CookieNotice } from "@/components/cookie-notice"
 
 const SITE_URL = "https://badrum-sundsvall.se"
 const SITE_NAME = "Badrumsrenovering Sundsvall"
+const GA_ID = "G-W7YPFKN239"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
@@ -93,6 +95,23 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv" className="bg-background">
+      <head>
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}', {
+              anonymize_ip: true,
+            });
+          `}
+        </Script>
+      </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <Header />
         <main>{children}</main>
