@@ -1,16 +1,19 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { ArrowRight, Award, CheckCircle, Clock, Shield, Sparkles } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { LeadForm } from "@/components/lead-form"
 import { ImageCarousel } from "@/components/image-carousel"
-import { CheckCircle, ArrowRight, Shield, Award, Clock, Sparkles } from "lucide-react"
+import { LeadForm } from "@/components/lead-form"
 
 const SITE_URL = "https://badrum-sundsvall.se"
 const PAGE_TITLE = "Badrumsrenovering i Sundsvall | Få kostnadsfri offert"
 const PAGE_DESC =
   "Få kostnadsfri offert på badrumsrenovering i Sundsvall. Vi förmedlar din förfrågan till lokala, kontrollerade hantverkare. ROT-avdrag. Svar inom 24h."
+
+const OG_IMAGE_PATH = "/og.webp"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -54,7 +57,7 @@ export const metadata: Metadata = {
     siteName: "Badrum Sundsvall",
     images: [
       {
-        url: `${SITE_URL}/og.jpg`,
+        url: OG_IMAGE_PATH,
         width: 1200,
         height: 630,
         alt: "Badrumsrenovering i Sundsvall",
@@ -66,7 +69,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: PAGE_TITLE,
     description: PAGE_DESC,
-    images: [`${SITE_URL}/og.jpg`],
+    images: [OG_IMAGE_PATH],
   },
 }
 
@@ -117,7 +120,7 @@ const trustFeatures = [
   {
     icon: Shield,
     title: "Kontrollerade företag",
-    description: "Vi förmedlar förfrågningar till företag som arbetar enligt branschregler för våtrum.",
+    description: "Vi förmedlar förfrågningar endast till företag som är verifierade och arbetar enligt branschregler för våtrum.",
   },
   {
     icon: Award,
@@ -150,7 +153,7 @@ const miniFaq = [
   {
     question: "Är hantverkarna certifierade?",
     answer:
-      "Vi strävar efter att förmedla till företag som följer branschregler för våtrum. Certifieringar kan variera och bekräftas i offert/avtal.",
+      "Ja. Vi förmedlar endast till verifierade företag med relevanta behörigheter och som följer gällande branschregler för våtrum. Exakta intyg/behörigheter bekräftas alltid i offert och avtal med utförande företag.",
   },
 ]
 
@@ -162,9 +165,8 @@ export default function HomePage() {
     name: "Badrumsrenovering Sundsvall",
     url: SITE_URL,
     inLanguage: "sv-SE",
-    image: `${SITE_URL}/og.jpg`,
-    description:
-      "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
+    image: `${SITE_URL}${OG_IMAGE_PATH}`,
+    description: "Vi förmedlar offertförfrågningar för badrumsrenovering till lokala företag i Sundsvall.",
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": SITE_URL,
@@ -173,7 +175,7 @@ export default function HomePage() {
     },
     provider: {
       "@type": "Organization",
-      name: "Innovo AB",
+      name: "Badrum Sundsvall",
       url: SITE_URL,
     },
     areaServed: [
@@ -211,6 +213,8 @@ export default function HomePage() {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/40 to-transparent" />
         </div>
@@ -238,6 +242,7 @@ export default function HomePage() {
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                 </Link>
               </Button>
+
               <Button
                 asChild
                 variant="outline"
@@ -339,6 +344,7 @@ export default function HomePage() {
                 alt="Pågående badrumsrenovering i Sundsvall"
                 fill
                 className="object-cover"
+                sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
           </div>
