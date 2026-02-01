@@ -439,10 +439,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-primary text-primary-foreground py-20 lg:py-28">
+      <section className="bg-primary text-primary-foreground py-80 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.15em] text-primary-foreground/70 mb-3">Trygghet</p>
+            <p className="text-sm uppercase tracking-[0.15em] text-primary-foreground/80 mb-3">Trygghet</p>
             <h2 className="font-serif text-3xl font-medium sm:text-4xl">Kvalitet du kan lita på</h2>
           </div>
 
