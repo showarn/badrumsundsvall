@@ -21,12 +21,17 @@ type LeadPayload = {
   timeline: string
   postalCode: string
   name: string
+  email: string
   phone: string
   description?: string
 }
 
 function toStringValue(v: FormDataEntryValue | null): string {
   return typeof v === "string" ? v.trim() : ""
+}
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
 const selectBase =
@@ -58,6 +63,7 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
         timeline: toStringValue(fd.get("timeline")),
         postalCode: toStringValue(fd.get("postalCode")),
         name: toStringValue(fd.get("name")),
+        email: toStringValue(fd.get("email")).toLowerCase(),
         phone: toStringValue(fd.get("phone")),
         description: isFull ? toStringValue(fd.get("description")) || undefined : undefined,
       }
@@ -70,6 +76,9 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       }
       if (!payload.name) {
         throw new Error("Fyll i namn.")
+      }
+      if (!payload.email || !isValidEmail(payload.email)) {
+        throw new Error("Fyll i en giltig e-postadress.")
       }
       if (!payload.phone) {
         throw new Error("Fyll i telefonnummer.")
@@ -143,6 +152,20 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       <div className="space-y-2">
         <Label htmlFor="name">Namn</Label>
         <Input id="name" name="name" type="text" placeholder="Ditt namn" required className="min-h-[44px]" />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">E-post</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          placeholder="din@epost.se"
+          required
+          className="min-h-[44px]"
+        />
       </div>
 
       <div className="space-y-2">

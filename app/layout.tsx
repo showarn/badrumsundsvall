@@ -10,7 +10,12 @@ import { CookieNotice } from "@/components/cookie-notice"
 
 const SITE_URL = "https://badrum-sundsvall.se"
 const SITE_NAME = "Badrumsrenovering Sundsvall"
+
+// GA4 (Analytics)
 const GA_ID = "G-W7YPFWZ939"
+
+// Google Ads (Conversion tracking base tag)
+const GOOGLE_ADS_ID = "AW-17921425094"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
@@ -97,10 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="sv" className="bg-background">
       <head>
         {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
         <Script id="ga4" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -111,7 +113,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             });
           `}
         </Script>
+
+        {/* Google Ads tagg */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_ADS_ID}');
+          `}
+        </Script>
       </head>
+
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <Header />
         <main>{children}</main>
