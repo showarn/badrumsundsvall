@@ -101,29 +101,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sv" className="bg-background">
       <head>
-        {/* Google Analytics 4 */}
-        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-        <Script id="ga4" strategy="afterInteractive">
+        {/* ✅ One gtag loader (covers both GA4 + Google Ads) */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+
+        {/* ✅ One init + two config */}
+        <Script id="gtag-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag(){window.dataLayer.push(arguments);}
+            window.gtag = window.gtag || gtag;
+
             gtag('js', new Date());
+
+            // GA4
             gtag('config', '${GA_ID}', {
               anonymize_ip: true,
             });
-          `}
-        </Script>
 
-        {/* Google Ads tagg */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-ads" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
+            // Google Ads base config
             gtag('config', '${GOOGLE_ADS_ID}');
           `}
         </Script>

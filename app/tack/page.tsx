@@ -1,10 +1,16 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import Script from "next/script"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, Clock, Phone, ArrowRight } from "lucide-react"
 
 const SITE_URL = "https://badrum-sundsvall.se"
+
+// Google Ads
+const GOOGLE_ADS_ID = "AW-17921425094"
+const GOOGLE_ADS_LABEL = "w5_cCNaAnPkbEMb9zOFC"
+const ADS_SEND_TO = `${GOOGLE_ADS_ID}/${GOOGLE_ADS_LABEL}`
 
 export const metadata: Metadata = {
   title: "Tack för din förfrågan",
@@ -65,6 +71,24 @@ export default function ThankYouPage() {
 
   return (
     <div className="flex flex-col min-h-[70vh]">
+      {/* ✅ Google Ads conversion (fires on /tack) */}
+      <Script id="google-ads-conversion" strategy="afterInteractive">
+        {`
+          (function() {
+            try {
+              if (typeof window === 'undefined') return;
+              if (typeof window.gtag !== 'function') return;
+
+              window.gtag('event', 'conversion', {
+                'send_to': '${ADS_SEND_TO}'
+              });
+            } catch (e) {
+              // no-op
+            }
+          })();
+        `}
+      </Script>
+
       <section className="flex-1 flex items-center bg-muted py-16 lg:py-24">
         <div className="mx-auto max-w-3xl px-4 lg:px-8 w-full">
           <Card className="border-0 shadow-xl">
