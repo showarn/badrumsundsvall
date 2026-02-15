@@ -1,18 +1,24 @@
 "use client"
 
 import React, { useMemo, useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 type LeadFormVariant = "full" | "compact"
 
 interface LeadFormProps {
   variant?: LeadFormVariant
+  /**
+   * Visa textfältet "Kort beskrivning" även i compact (rekommenderas).
+   * Default: true för full, false för compact.
+   */
+  showDescription?: boolean
 }
 
 type LeadPayload = {
@@ -24,6 +30,10 @@ type LeadPayload = {
   email: string
   phone: string
   description?: string
+
+  // 🔎 Källa
+  sourcePath?: string
+  sourceUrl?: string
 }
 
 function toStringValue(v: FormDataEntryValue | null): string {
@@ -39,12 +49,81 @@ const selectBase =
   "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 " +
   "disabled:cursor-not-allowed disabled:opacity-50"
 
-export function LeadForm({ variant = "full" }: LeadFormProps) {
+type Choice = { value: string; label: string }
+
+const PROJECT_TYPE_CHOICES: Choice[] = [
+  { value: "renovation", label: "Renovering" },
+  { value: "new", label: "Nytt badrum" },
+]
+
+const SIZE_CHOICES: Choice[] = [
+  { value: "small", label: "Litet (< 5 kvm)" },
+  { value: "medium", label: "Mellan (5–10)" },
+  { value: "large", label: "Stort (> 10)" },
+]
+
+const TIMELINE_CHOICES: Choice[] = [
+  { value: "now", label: "Snarast" },
+  { value: "1-3months", label: "1–3 mån" },
+  { value: "later", label: "Senare" },
+]
+
+function MobileChoiceGroup(props: {
+  id: string
+  name: string
+  label: string
+  value: string
+  choices: Choice[]
+  onChange: (next: string) => void
+}) {
+  const { id, name, label, value, choices, onChange } = props
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+
+      {/* a11y: hidden input håller required + form semantics */}
+      <input id={id} name={name} value={value} readOnly required className="sr-only" />
+
+      <div className="grid grid-cols-2 gap-2">
+        {choices.map((c) => {
+          const isActive = c.value === value
+          return (
+            <button
+              key={c.value}
+              type="button"
+              onClick={() => onChange(c.value)}
+              className={cn(
+                "min-h-[44px] rounded-md border px-3 py-2 text-sm text-left transition",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                isActive ? "border-foreground bg-foreground text-background" : "border-border bg-background"
+              )}
+              aria-pressed={isActive}
+            >
+              {c.label}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+export function LeadForm({ variant = "full", showDescription }: LeadFormProps) {
   const router = useRouter()
+  const pathname = usePathname()
+  const isMobile = useIsMobile()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // För mobil-snabbval (styr UI). På desktop används native <select>.
+  const [projectType, setProjectType] = useState<string>("")
+  const [size, setSize] = useState<string>("")
+  const [timeline, setTimeline] = useState<string>("")
+
   const isFull = useMemo(() => variant === "full", [variant])
+  const shouldShowDescription = showDescription ?? isFull
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -57,6 +136,9 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       const form = e.currentTarget
       const fd = new FormData(form)
 
+      const rawDescription = toStringValue(fd.get("description"))
+
+      // Om mobil-snabbval används: våra hidden inputs bär värdet, så fd.get(...) funkar.
       const payload: LeadPayload = {
         projectType: toStringValue(fd.get("projectType")),
         size: toStringValue(fd.get("size")),
@@ -65,7 +147,11 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
         name: toStringValue(fd.get("name")),
         email: toStringValue(fd.get("email")).toLowerCase(),
         phone: toStringValue(fd.get("phone")),
-        description: isFull ? toStringValue(fd.get("description")) || undefined : undefined,
+        description: rawDescription ? rawDescription : undefined,
+
+        // 🔎 källa
+        sourcePath: pathname || undefined,
+        sourceUrl: typeof window !== "undefined" ? window.location.href : undefined,
       }
 
       if (!payload.projectType || !payload.size || !payload.timeline) {
@@ -96,7 +182,6 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
       }
 
       router.push("/tack")
-      return
     } catch (err) {
       const message = err instanceof Error ? err.message : "Något gick fel."
       setError(message)
@@ -106,34 +191,76 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-      <div className="space-y-2">
-        <Label htmlFor="projectType">Typ av projekt</Label>
-        <select id="projectType" name="projectType" required className={cn(selectBase, "text-sm")}>
-          <option value="">Välj typ av projekt</option>
-          <option value="renovation">Renovering av befintligt badrum</option>
-          <option value="new">Nytt badrum</option>
-        </select>
-      </div>
+      {/* PROJECT TYPE */}
+      {isMobile ? (
+        <MobileChoiceGroup
+          id="projectType"
+          name="projectType"
+          label="Typ av projekt"
+          value={projectType}
+          choices={PROJECT_TYPE_CHOICES}
+          onChange={setProjectType}
+        />
+      ) : (
+        <div className="space-y-2">
+          <Label htmlFor="projectType">Typ av projekt</Label>
+          <select
+            id="projectType"
+            name="projectType"
+            required
+            className={cn(selectBase, "text-sm")}
+            defaultValue=""
+          >
+            <option value="">Välj typ av projekt</option>
+            <option value="renovation">Renovering av befintligt badrum</option>
+            <option value="new">Nytt badrum</option>
+          </select>
+        </div>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="size">Ungefärlig storlek</Label>
-        <select id="size" name="size" required className={cn(selectBase, "text-sm")}>
-          <option value="">Välj storlek</option>
-          <option value="small">Litet (under 5 kvm)</option>
-          <option value="medium">Mellan (5–10 kvm)</option>
-          <option value="large">Stort (över 10 kvm)</option>
-        </select>
-      </div>
+      {/* SIZE */}
+      {isMobile ? (
+        <MobileChoiceGroup
+          id="size"
+          name="size"
+          label="Ungefärlig storlek"
+          value={size}
+          choices={SIZE_CHOICES}
+          onChange={setSize}
+        />
+      ) : (
+        <div className="space-y-2">
+          <Label htmlFor="size">Ungefärlig storlek</Label>
+          <select id="size" name="size" required className={cn(selectBase, "text-sm")} defaultValue="">
+            <option value="">Välj storlek</option>
+            <option value="small">Litet (under 5 kvm)</option>
+            <option value="medium">Mellan (5–10 kvm)</option>
+            <option value="large">Stort (över 10 kvm)</option>
+          </select>
+        </div>
+      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="timeline">När vill du starta?</Label>
-        <select id="timeline" name="timeline" required className={cn(selectBase, "text-sm")}>
-          <option value="">Välj tidsram</option>
-          <option value="now">Så snart som möjligt</option>
-          <option value="1-3months">Inom 1–3 månader</option>
-          <option value="later">Senare / Planerar</option>
-        </select>
-      </div>
+      {/* TIMELINE */}
+      {isMobile ? (
+        <MobileChoiceGroup
+          id="timeline"
+          name="timeline"
+          label="När vill du starta?"
+          value={timeline}
+          choices={TIMELINE_CHOICES}
+          onChange={setTimeline}
+        />
+      ) : (
+        <div className="space-y-2">
+          <Label htmlFor="timeline">När vill du starta?</Label>
+          <select id="timeline" name="timeline" required className={cn(selectBase, "text-sm")} defaultValue="">
+            <option value="">Välj tidsram</option>
+            <option value="now">Så snart som möjligt</option>
+            <option value="1-3months">Inom 1–3 månader</option>
+            <option value="later">Senare / Planerar</option>
+          </select>
+        </div>
+      )}
 
       <div className="space-y-2">
         <Label htmlFor="postalCode">Postnummer</Label>
@@ -175,13 +302,14 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
           name="phone"
           type="tel"
           inputMode="tel"
+          autoComplete="tel"
           placeholder="07X XXX XX XX"
           required
           className="min-h-[44px]"
         />
       </div>
 
-      {isFull ? (
+      {shouldShowDescription ? (
         <div className="space-y-2">
           <Label htmlFor="description">
             Kort beskrivning <span className="text-muted-foreground">(valfritt)</span>
@@ -189,9 +317,9 @@ export function LeadForm({ variant = "full" }: LeadFormProps) {
           <Textarea
             id="description"
             name="description"
-            placeholder="Beskriv gärna ditt projekt kort..."
-            rows={3}
-            className="min-h-[88px] resize-none"
+            placeholder="Beskriv gärna ditt projekt kort… (t.ex. kakel, golvvärme, planlösning, ev. problem)"
+            rows={isFull ? 3 : 2}
+            className={cn("resize-none", isFull ? "min-h-[88px]" : "min-h-[72px]")}
           />
         </div>
       ) : null}

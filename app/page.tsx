@@ -526,7 +526,9 @@ export default function HomePage() {
             <Card className="border-0 shadow-xl bg-card">
               <CardContent className="p-8 lg:p-10">
                 <h3 className="font-serif text-2xl font-medium text-foreground mb-8">Få kostnadsfri offert</h3>
-                <LeadForm variant="compact" />
+
+                {/* ✅ Gör compact lika som kontakt: visa "Kort beskrivning" även här */}
+                <LeadForm variant="compact" showDescription />
               </CardContent>
             </Card>
           </div>
